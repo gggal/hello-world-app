@@ -29,13 +29,14 @@ jobs:
     #   uses: Azure/k8s-set-context@v2
     #   with:
     #     kubeconfig: ${{ secrets.KUBE_CONFIG }}
+    # - name: Install Helm
+    #   uses: azure/setup-helm@v3
     # - name: Deploy to K8s
     #   env:
     #   - DEPLOYMENT_NAME=hello-world
     #   run: |
-    #     kubectl get deployment $DEPLOYMENT_NAME >/dev/null 2>&1
-    #     if [ $? -ne 0 ]; then
-    #       kubectl create deploy $DEPLOYMENT_NAME --image $NEW_IMAGE --port=8000
-    #     else
-    #       kubectl set image deployment/$DEPLOYMENT_NAME hello-world-app=$NEW_IMAGE
-    #     fi
+    #     helm upgrade --install --atomic \
+    #       --set image.tag=${{ github.ref_name }} \
+    #       --set secrets.DB_PASSWD=${{ secrets.DB_PASSWD }} \
+    #       --set mysql.auth.password=${{ secrets.DB_PASSWD }} \
+    #       $DEPLOYMENT_NAME ./chart

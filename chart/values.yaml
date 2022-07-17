@@ -1,0 +1,28 @@
+# values for app
+nameOverride: hello-world
+image:
+  repository:  gggal/hello-world-app
+service:
+  type: ClusterIP
+  port: 80
+config:
+  DB_HOST: &db-svc hello-world-db
+  DB_USER: &user hello-world
+  DB_NAME: &db default
+secrets:
+
+# values for dependency chart
+mysql:
+  nameOverride: *db-svc
+  deployChart: true
+  volumePermissions:
+    enabled: true
+  primary:
+    service:
+      port: 3306
+  auth:
+    database: *db
+    username: *user
+  initdbScripts:
+    setup.sql: |
+      CREATE TABLE default.client_activity ( date varchar(255), address varchar(255));
