@@ -1,0 +1,1 @@
+CREATE TABLE default.client_activity ( date varchar(255), address varchar(255));
